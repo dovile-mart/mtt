@@ -4,15 +4,18 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import { Toolbar } from '@mui/material';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useMatch } from 'react-router-dom';
+
+
 
 const mttLogo1 = 'src/images/mttLogo1.png';
 const mttLogo2 = 'src/images/mttLogo2.png';
 
 
-function TabMUI() {
-  const [value, setValue] = useState(0);
+function TabMUI() { 
   const [logo, setLogo] = useState(null);
+  
+  const myEventsMatch = useMatch('/myevents')
 
   useEffect(() => {
     const random = Math.random();
@@ -21,9 +24,8 @@ function TabMUI() {
     setLogo(selectedLogo);
 }, [])
 
-  const handleChange = (e, val) => {
-    setValue(val);
-  }
+  const tabValue = myEventsMatch ? 1 : 0;
+
   
   return (
     <>
@@ -37,7 +39,7 @@ function TabMUI() {
             )}
           </Box>
           <Box sx={{ flexGrow: 1 }}>
-          <Tabs value={value} onChange={handleChange} variant='fullWidth' centered selectionFollowsFocus textColor='inherit' TabIndicatorProps={{ style: { background: 'white' } }}>
+          <Tabs value={tabValue} variant='fullWidth' centered selectionFollowsFocus textColor='inherit' TabIndicatorProps={{ style: { background: 'white' } }}>
               <Tab label='Home' component={Link} to='/'/>
               <Tab label='My events'component={Link} to='myevents'/>
             </Tabs>

@@ -16,6 +16,7 @@ function Weather() {
   
 
   const fetchWeatherData = (city, setWeather) => {
+    console.log('apia kutsuttu', city)
     fetch(
       `http://api.openweathermap.org/data/2.5/weather?lang=fi&q=${city}&units=metric&APPID=${apiKey}`
     )
@@ -30,7 +31,8 @@ function Weather() {
 
   useEffect(() => {
     fetchWeatherData(selectedCity, setCityWeather);
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCity]);
 
   const renderWeatherInfo = (weather) => {
     console.log(weather)

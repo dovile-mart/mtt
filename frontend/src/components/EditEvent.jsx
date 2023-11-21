@@ -125,6 +125,9 @@ function EditEvent() {
             type="date"
             name="startDate"
             value={event.startDate}
+            InputLabelProps={{
+              shrink: true,
+            }}
             onChange={handleInputChange}
             fullWidth
             margin="normal"
@@ -134,6 +137,9 @@ function EditEvent() {
             label="End Date"
             type="date"
             name="endDate"
+            InputLabelProps={{
+              shrink: true,
+            }}
             value={event.endDate}
             onChange={handleInputChange}
             fullWidth
