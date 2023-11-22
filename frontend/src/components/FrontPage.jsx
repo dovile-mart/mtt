@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import { Typography, TextField, Button } from "@mui/material";
 import Weather from "./Weather";
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -84,7 +84,7 @@ function FrontPage() {
                 const locationCity = placeData.address_locality.fi;
                 const locationAddress = placeData.street_address.fi;
                 const locationZipCode = placeData.postal_code;
-              //  console.log(locationAddress+", "+locationZipCode+", "+locationCity);
+                console.log(locationAddress+", "+locationZipCode+", "+locationCity);
               
                 // Tarkista, onko tapahtuma ilmainen
                 const isFree = eventData.offers && eventData.offers.length > 0 && eventData.offers[0].is_free;
@@ -236,9 +236,12 @@ function FrontPage() {
         const filtered = events.filter((event) => {
           const startDate = new Date(event.startDate); // Olettaen että event.startDate on muotoa "yyyy-MM-dd"
           const searchDate = new Date(keyword); // Olettaen että keyword on muotoa "yyyy-MM-dd"
+          const endDate = new Date(event.endDate); // Olettaen että keyword on muotoa "yyyy-MM-dd"
           startDate.setHours(0, 0, 0, 0);
           searchDate.setHours(0, 0, 0, 0);
-          return startDate.getTime() === searchDate.getTime();  //vertallaan päivämääriä ilman aikaa
+          endDate.setHours(23, 59, 59, 999)
+          return ((startDate <= searchDate && searchDate <= endDate) ||
+            startDate.getTime() === searchDate.getTime());  //vertallaan päivämääriä ilman aikaa
         });
         setFilteredEvents(filtered);
       }
