@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Bootstrap CSS https://getbootstrap.com/docs/4.4/getting-started/introduction/-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>User List</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="mt-5">User List</h1>
+
+        <div class="form-inline">
+            <!-- Add search input and button for username -->
+            <input type="text" id="searchInputUsername" class="form-control" placeholder="Search by username">
+            <button id="searchButtonUsername" class="btn btn-primary" style="margin: 10px;">Search</button>
+        </div>
+
+        <table class="table mt-4">
+            <thead class="thead-dark">
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody">
+                <!-- Loop through users and display information -->
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.userId}"></td>
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.password}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td th:text="${user.role}"></td>
+                    <td>
+                        <!-- Add buttons for delete and edit operations -->
+                        <form th:action="@{/deleteUser/{userId}(userId=${user.userId})}" method="get"
+                            onsubmit="return confirm('Are you sure you want to delete this user?')">
+                            <button type="submit" class="btn btn-danger" style="margin: 10px;">Delete</button>
+                        </form>
+
+                        <form th:action="@{/editUser/{userId}(userId=${user.userId})}" method="get">
+                            <button type="submit" class="btn btn-primary" style="margin: 10px;">Edit</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a href="/addUser" class="btn btn-primary" style="margin: 10px;">Add User</a>
+    </div>
+
+</body>
+<script>
+    document.getElementById("searchButtonUsername").addEventListener("click", function () {
+        var searchTerm = document.getElementById("searchInputUsername").value.toLowerCase();
+        var tableBody = document.getElementById("userTableBody");
+        var userRows = tableBody.getElementsByTagName("tr");
+
+        for (var i = 0; i < userRows.length; i++) {
+            var usernameCell = userRows[i].getElementsByTagName("td")[1];
+            if (usernameCell) {
+                var username = usernameCell.textContent.toLowerCase();
+                if (username.includes(searchTerm)) {
+                    userRows[i].style.display = "";
+                } else {
+                    userRows[i].style.display = "none";
+                }
+            }
+        }
+    });
+</script>
+</html>

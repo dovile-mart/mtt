@@ -47,7 +47,7 @@ public class EndUserRestController {
     }
     //get user by username
     @GetMapping("/users/{name}")
-    public @ResponseBody EndUser getUEndUser(@PathVariable("name") String username){
+    public @ResponseBody Optional<EndUser> getUEndUser(@PathVariable("name") String username){
         log.info("Fetch user by username");
         try {
             return userRepo.findByUsername(username);
