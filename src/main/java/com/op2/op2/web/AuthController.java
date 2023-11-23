@@ -18,13 +18,10 @@ import com.op2.op2.services.AuthService;
 
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping(path ="/api/auth")

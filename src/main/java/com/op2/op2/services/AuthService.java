@@ -1,11 +1,9 @@
 package com.op2.op2.services;
 
 import org.springframework.stereotype.Service;
-import com.op2.op2.services.UserDetailsServiceImpl;
 import com.op2.op2.domain.EndUser;
 
 
-import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
