@@ -11,4 +11,5 @@ public interface EventRepository extends CrudRepository<Event, Long> {
     Event findByEventId(long eventId);
     List<Event> findByLocation(Location location);
     List<Event> findByCategory(Category category);
+    List<Event> findByIndoorEvent(boolean indoorEvent);
 }

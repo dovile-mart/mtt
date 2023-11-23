@@ -34,6 +34,7 @@ public class Event {
     private String description;
     private double price;
     private String streetAddress;
+    private boolean indoorEvent;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "locationId")
@@ -87,7 +88,7 @@ public class Event {
     }
 
         public Event(String eventName, LocalDate startDate, LocalDate endDate, String description, double price, String streetAddress, Location location,
-            Category category, EndUser endUser) {
+            Category category, EndUser endUser, boolean indoorEvent) {
         super();
         this.eventName = eventName;
         this.startDate = startDate;
@@ -98,6 +99,7 @@ public class Event {
         this.location = location;
         this.category = category;
         this.endUser = endUser;
+        this.indoorEvent = indoorEvent;
     }
 
 
@@ -179,6 +181,14 @@ public class Event {
         this.endUser = endUser;
     }
 
+    public boolean isIndoorEvent() {
+        return indoorEvent;
+    }
+
+    public void setIndoorEvent(boolean indoorEvent) {
+        this.indoorEvent = indoorEvent;
+    }
+
     /*
      * @Override
      * public String toString() {
@@ -196,6 +206,6 @@ public class Event {
     @Override
     public String toString() {
         return "Event [eventId = " + eventId + " eventName = " + eventName + " startDate = " + startDate + " endDate = " + endDate+ " description = "
-                + description + " price = " + price + " streetaddress =" + streetAddress+ " location=" + location + " category = " + category + " endUser = " + endUser + "]";
+                + description + " price = " + price + " streetaddress =" + streetAddress+ " location=" + location + " category = " + category + " endUser = " + endUser + " indoorEvent = " + indoorEvent + "]";
     }
 }
