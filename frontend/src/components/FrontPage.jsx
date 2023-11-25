@@ -343,10 +343,13 @@ function FrontPage() {
                   </TableRow>
                   {expandedEventId === event.eventId && (
                     <TableRow>
-                      <TableCell colSpan={6}>
-                        Price: {event.price}<br/>
-                        Street Address: {event.streetAddress || 'N/A'}<br />
-                        Description: {event.description || 'N/A'}
+                      <TableCell colSpan={1}></TableCell>
+                      <TableCell colSpan={2}>
+                        <b>Price:</b> {event.price}<br />
+                        <b>Address:</b> {event.streetAddress || 'N/A'}
+                      </TableCell>
+                      <TableCell colSpan={3}>
+                        <b>Description:</b> {event.description || 'N/A'}
                     </TableCell>
                   </TableRow>
                 )}
