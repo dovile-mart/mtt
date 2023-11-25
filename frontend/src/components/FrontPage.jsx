@@ -62,6 +62,32 @@ function FrontPage() {
     });
   };
 
+  const fetchLocationData = (placeId) => {
+    return fetch(`${placeId}`)
+      .then((placeResponse) => placeResponse.json())
+      .then((placeData) => {
+        //location tiedot:
+        const locationCity = placeData.address_locality.fi;
+        const locationAddress = placeData.street_address.fi;
+        const locationZipCode = placeData.postal_code;
+        //console.log(locationAddress + ", " + locationZipCode + ", " + locationCity);
+        return {
+          city: locationCity,
+          address: locationAddress,
+          zipCode: locationZipCode,
+        };
+      });
+  }
+  
+  const fetchEventCategory = (categoryId) => {
+    return fetch(`${categoryId}`)
+      .then((categoryResponse) => categoryResponse.json())
+      .then((categoryData) => {
+        const categoryName = categoryData.name.fi;
+        return categoryName;
+      });
+  };
+
   //tapahtumahaku avoimesta rajapinnasta:
   const fetchHelsinkiEventDataFromApi = () => {
     fetch("https://api.hel.fi/linkedevents/v1/event/?start=now&end=today")
@@ -73,61 +99,58 @@ function FrontPage() {
           .map((eventData) => {
             const formattedStartDate = formatDateTime(eventData.start_time);
             const formattedEndDate = formatDateTime(eventData.end_time);
-        
+
+            // Tarkista, onko tapahtuma ilmainen
+            const isFree = eventData.offers && eventData.offers.length > 0 && eventData.offers[0].is_free;
+            // Aseta hinta sen mukaan, onko ilmainen vai ei
+            const eventPrice = isFree ? "Vapaa pääsy" :
+              (eventData.offers && eventData.offers.length > 0 &&
+                eventData.offers[0].price && eventData.offers[0].price.fi)
+                ? eventData.offers[0].price.fi
+                : 'Ei tietoa';
+          
+            //tapahtuman kuvaus, lyhyt ja pitkä:
+            const descriptionShort = eventData.short_description.fi;
+            //const descriptionLong = eventData.description.fi;
+            //console.log(descriptionLong);
+
             //jokaisen tapahtuman location-linkin haku:
             const placeId = eventData.location ? eventData.location['@id'] || '' : '';
-            return fetch(`${placeId}`)
-              .then((placeResponse) => placeResponse.json())
+            //jokaisen tapahtuman kategoria-linkin haku:
+            const categoryId = eventData.keywords[0] ? eventData.keywords[0]['@id'] || '' : '';
+            
+            return fetchLocationData(placeId)
               .then((placeData) => {
-                //  console.log("place data on: ", placeData)
-                //location tiedot:
-                const locationCity = placeData.address_locality.fi;
-                const locationAddress = placeData.street_address.fi;
-                const locationZipCode = placeData.postal_code;
-                console.log(locationAddress+", "+locationZipCode+", "+locationCity);
-              
-                // Tarkista, onko tapahtuma ilmainen
-                const isFree = eventData.offers && eventData.offers.length > 0 && eventData.offers[0].is_free;
-                // Aseta hinta sen mukaan, onko ilmainen vai ei
-                const eventPrice = isFree ? "Vapaa pääsy" :
-                  (eventData.offers && eventData.offers.length > 0 &&
-                    eventData.offers[0].price && eventData.offers[0].price.fi)
-                    ? eventData.offers[0].price.fi
-                    : 'Ei tietoa';
-              
-                //tapahtuman kuvaus, lyhyt ja pitkä:
-                const descriptionShort = eventData.short_description.fi;
-                //const descriptionLong = eventData.description.fi;
-                //console.log(descriptionLong);
-
-                return {
-                  eventId: eventData.id,
-                  eventName: eventData.name.fi,
-                  startDate: formattedStartDate,
-                  endDate: formattedEndDate,
-                  price: eventPrice,
-                  description: descriptionShort,
-                  location: locationCity,
-                  streetAddress: locationAddress,
-                  category: "Helsingin kategoria",
-                  }
-                
-              })
+                return fetchEventCategory(categoryId)
+                  .then((categoryName) => {
+                    return {
+                      eventId: eventData.id,
+                      eventName: eventData.name.fi,
+                      startDate: formattedStartDate,
+                      endDate: formattedEndDate,
+                      price: eventPrice,
+                      description: descriptionShort,
+                      location: placeData.city,
+                      streetAddress: placeData.address,
+                      category: categoryName,
+                    };
+                  });
+              });
           });
+        
         return Promise.all(apiHelsinkiEvents)
-        .then((events)=>{
+          .then((events) => {
             setEvents((prevEvents) => [...prevEvents, ...events]);
             setFilteredEvents((prevEvents) => [...prevEvents, ...events]);
           })
-          .catch((placeError) => {
-            console.error('Couldnt fetch place data: ', placeError);
+          .catch((error) => {
+            console.error('Could not fetch data: ', error);
           });
-      }).catch((error) => {
-      console.error('Could not fetch data: ', error);
-    });
-
+      })
+      .catch((error) => {
+        console.error('Could not fetch data: ', error);
+      });
   };
-     
 
     const fetchEspooEventDataFromApi = () => {
       fetch("http://api.espoo.fi/events/v1/event/?include=location%2Ckeywords&page=2")
