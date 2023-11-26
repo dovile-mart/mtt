@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.op2.op2.domain.EndUser;
 import com.op2.op2.domain.EndUserRepository;
 import com.op2.op2.domain.Event;
-import com.op2.op2.domain.Location;
 
 import jakarta.validation.Valid;
 

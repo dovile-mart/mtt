@@ -5,12 +5,13 @@ import TabMUI from './navigation/TabMUI';
 import FrontPage from './components/FrontPage';
 import MyEvents from './components/MyEvents';
 import LoginPage from './components/Login';
+import RegisterPage from './components/Register';
 import EventDetails from './components/EventDetails';
 import AddEvent from './components/AddEvent';
 import EditEvent from './components/EditEvent';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-
+import { AuthProvider } from './components/AuthContext';
 
 const mttTheme = createTheme({  //https://colorhunt.co/palette/164863427d9d9bbec8ddf2fd
   palette: {
@@ -56,22 +57,25 @@ const mttTheme3 = createTheme({ //https://colorhunt.co/palette/151515301b3f3c415
   },
 });
 export default function App() {
-
+  
   return (
     <ThemeProvider theme={mttTheme2}>
       <CssBaseline />
+      <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<TabMUI />}>
             <Route index element={<FrontPage />} />
             <Route path='myevents' element={<MyEvents />} />
             <Route path='login' element={<LoginPage />} />
+            <Route path='register' element={<RegisterPage />} />
             <Route path='event/:eventId' element={<EventDetails />} />
             <Route path='addevent' element={<AddEvent />} />
             <Route path='editevent/:eventId' element={<EditEvent />} />
           </Route>
         </Routes>
       </BrowserRouter>
+      </AuthProvider>
       </ThemeProvider>
 
   )
