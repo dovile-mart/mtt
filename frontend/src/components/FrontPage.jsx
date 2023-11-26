@@ -36,8 +36,8 @@ function FrontPage() {
           const dbEvents = data.map((event) => ({
             eventId: event.eventId,
             eventName: event.eventName,
-            startDate: event.startDate,
-            endDate: event.endDate,
+            startDate: formatDateTime(event.startDate),
+            endDate: event.endDate ? formatDateTime(event.endDate) : " ",
             price: event.price + " €",
             description: event.description,
             location: event.location,
@@ -58,7 +58,7 @@ function FrontPage() {
       month: 'numeric',
       day: 'numeric',
       hour: 'numeric',
-      minute: 'numeric'
+      minute: 'numeric',
     });
   };
 
@@ -98,7 +98,7 @@ function FrontPage() {
           .filter(eventData => eventData.name.fi)
           .map((eventData) => {
             const formattedStartDate = formatDateTime(eventData.start_time);
-            const formattedEndDate = formatDateTime(eventData.end_time);
+            const formattedEndDate = eventData.end_time ? formatDateTime(eventData.end_time):'nonono';
 
             // Tarkista, onko tapahtuma ilmainen
             const isFree = eventData.offers && eventData.offers.length > 0 && eventData.offers[0].is_free;
@@ -356,7 +356,7 @@ function FrontPage() {
                     {event.eventName}
                   </TableCell>
                   <TableCell align="right">{event.startDate}</TableCell>
-                  <TableCell align="right">{event.endDate}</TableCell>
+                  <TableCell align="right">{event?.endDate || event.endDate?.null ||'-'}</TableCell>
                   {/*<TableCell align="right">{event.price}</TableCell>*/}
                   <TableCell align="right">{event.location?.city || event.location || 'N/A'}</TableCell>
                   <TableCell align="right">{event.category?.categoryName || event.category || 'N/A'}</TableCell>
