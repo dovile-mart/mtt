@@ -1,5 +1,6 @@
 package com.op2.op2;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +17,9 @@ public class Op2Application {
 		SpringApplication.run(Op2Application.class, args);
 	}
 
+/*	@Autowired
+	EndUserRepository endUserRepository;
+
 	@Bean
 	public CommandLineRunner demodata(EndUserRepository endUserRepository, BCryptPasswordEncoder bCryptPasswordEncoder){
 		return (args) ->{
@@ -26,6 +30,6 @@ public class Op2Application {
 				endUserRepository.save(endUser);
 			}
 		};
-	}
+	}*/
 
 }
