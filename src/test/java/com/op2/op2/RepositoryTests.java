@@ -38,7 +38,7 @@ public class RepositoryTests {
 
      @Test
      public void saveNewEmptyEvent() {
-         Event event = new Event(null, null, null, null, 0, null);
+         Event event = new Event("Not empty", LocalDate.now(), null, null, 0, null);
          eventRepository.save(event);
          assertThat(event.getEventId()).isNotNull();
     }
