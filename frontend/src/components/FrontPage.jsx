@@ -356,7 +356,7 @@ function FrontPage() {
                     {event.eventName}
                   </TableCell>
                   <TableCell align="right">{event.startDate}</TableCell>
-                  <TableCell align="right">{event?.endDate || event.endDate?.null ||'-'}</TableCell>
+                  <TableCell align="right">{event?.endDate ||'-'}</TableCell>
                   {/*<TableCell align="right">{event.price}</TableCell>*/}
                   <TableCell align="right">{event.location?.city || event.location || 'N/A'}</TableCell>
                   <TableCell align="right">{event.category?.categoryName || event.category || 'N/A'}</TableCell>
