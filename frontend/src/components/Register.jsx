@@ -13,6 +13,10 @@ function RegisterPage() {
   const { login } = useAuth();
   const { username, password, email } = user;
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
+  const [errorMessages, setErrorMessages] = useState('');
+  const [formattedError, setFormattedErrors] = useState('');
+  const [fieldName, setFieldName] = useState('');
 
   const handleChange = (event) => {
     setUser({ ...user, [event.target.name]: event.target.value });
@@ -30,9 +34,29 @@ function RegisterPage() {
         navigate('/'); // Redirect to the home page or another route
       })
       .catch((error) => {
-        // Handle registration error
-        console.error('Registration failed:', error);
+        if (error.response) {
+          console.error('Registration failed with status code', error.response.status);
+          console.error('Error details:', error.response.data);
+
+          // Check if error.response.data is an array
+          const errorMessages = Array.isArray(error.response.data)
+            ? error.response.data
+            : [error.response.data];
+
+          // Modify the error message format
+          const formattedError = errorMessages
+            .map(errorMessage => {
+              // Use RegExp to remove "register.request." and trim the string
+              return errorMessage.replace(/register\.request\./g, "").trim();
+            })
+            .join(', ');
+
+          setError(formattedError);
+        } else {
+          console.error('Error occurred:', error.message);
+        }
       });
+
   };
 
   return (
@@ -73,7 +97,7 @@ function RegisterPage() {
             onChange={handleChange}
           />
         </div>
-
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <Button variant="contained" color="primary" onClick={handleRegister}>
           Register
         </Button>
