@@ -8,13 +8,11 @@ import jakarta.validation.constraints.Size;
 
 
 public class AuthRequest {
-    @NotBlank(message = "Username must contain at least 4 characters")
-    @NotEmpty(message = "Username cannot be empty")
+    @NotBlank(message = "Username must contain at least 4 characters")    
     @Size(min = 4, max = 12, message = "Username must be between 4 and 12 characters")
     private String username = "";
 
     @NotBlank(message = "Password must contain at least one non-whitespace character")
-    @NotEmpty(message = "Password cannot be empty")
     @Size(min = 6, message = "Password must have at least 6 characters")
     @Pattern(
         regexp = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!]).*$",
@@ -22,8 +20,7 @@ public class AuthRequest {
     )
     private String password = "";
 
-    @NotBlank(message = "Email must be valid")
-    @NotEmpty(message = "Email cannot be empty")
+    @NotBlank(message = "Email must be valid")    
     @Pattern(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "Email must be valid")
     private String email = "";
 
