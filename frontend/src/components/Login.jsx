@@ -12,8 +12,11 @@ function LoginPage() {
   const { login } = useAuth();
   const { username, password } = user;
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
   const handleChange = (event) => {
+    setError(null);
+
     setUser({ ...user, [event.target.name]: event.target.value });
   };
 
@@ -30,12 +33,17 @@ function LoginPage() {
           console.log('isAuthenticated');
           navigate('/');
         }
+      })
+      .catch((error) => {
+        // Käsittely, jos kirjautuminen epäonnistuu
+        setError('Invalid username or password');
       });
   };
 
   return (
     <div>
       <Typography variant="h4">Login</Typography>
+      {error && <Typography color="error">{error}</Typography>}
 
       <form>
         <div>
