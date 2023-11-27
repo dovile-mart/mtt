@@ -14,7 +14,7 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-
+import { getEvents } from "../services/EventService";
 function FrontPage() {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -28,12 +28,15 @@ function FrontPage() {
   }, []);
 
   //tapahtumahaku tietokannasta:
-  const fetchDBevents = () => {
-    fetch("http://localhost:8080/events")
-      .then((response) => response.json())
-      .then((data) => {
-        if (data && data.length > 0) {
-          const dbEvents = data.map((event) => ({
+  const fetchDBevents = async () => {
+    try {
+      const response = await getEvents();
+
+//    fetch("http://localhost:8080/events")
+//      .then((response) => response.json())
+//      .then((data) => {
+//        if (data && data.length > 0) {
+          const dbEvents = response.map((event) => ({
             eventId: event.eventId,
             eventName: event.eventName,
             startDate: formatDateTime(event.startDate),
@@ -47,9 +50,11 @@ function FrontPage() {
           console.log('Events from H2: ', dbEvents);
           setEvents([...dbEvents]);
           setFilteredEvents([...dbEvents]); // Aseta suodatetut tapahtumat alkuperäisiksi
+    } catch (error) {
+      console.log(error)
         }
-      });
-  };
+      };
+
 
   //api-rajapinnasta tulleen aikamuodon formattointi:
   const formatDateTime = (dateTimeString) => {
