@@ -28,6 +28,12 @@ const mttTheme = createTheme({  //https://colorhunt.co/palette/164863427d9d9bbec
       // dark: will be calculated from palette.secondary.main,
       contrastText: '#164863',
     },
+    components: {
+      bgcolor:"#F1B4BB",
+      color: "#FFF5E0",
+      danger:"#FF6969",
+      error: "",
+    }
   },
 });
 const mttTheme2 = createTheme({ //https://colorhunt.co/palette/1320431f4172f1b4bbfdf0f0
@@ -59,7 +65,7 @@ const mttTheme3 = createTheme({ //https://colorhunt.co/palette/151515301b3f3c415
 export default function App() {
   
   return (
-    <ThemeProvider theme={mttTheme2}>
+    <ThemeProvider theme={mttTheme}>
       <CssBaseline />
       <AuthProvider>
       <BrowserRouter>
