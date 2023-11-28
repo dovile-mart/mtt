@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     // Perform your logout logic
     setAuthenticated(false);
+    window.location.href = '/';
   };
 
   return (
