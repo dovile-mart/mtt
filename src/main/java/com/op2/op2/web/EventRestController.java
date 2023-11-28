@@ -8,6 +8,10 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +28,8 @@ import com.op2.op2.domain.EventRepository;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import com.op2.op2.domain.EndUser;
+import com.op2.op2.domain.EndUserRepository;
 import com.op2.op2.domain.Event;
 
 @RestController
@@ -34,6 +40,8 @@ public class EventRestController {
 
     @Autowired
     private EventRepository eventRepository;
+    @Autowired
+    private EndUserRepository userRepo;
 
     @GetMapping({ "/events" })
     public @ResponseBody List<Event> findAllEvents() {
@@ -56,7 +64,11 @@ public class EventRestController {
     }
     @PostMapping({ "/events" })
     public Event newEvent (@RequestBody Event newEvent){
+        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        log.info(authenticationToken.getPrincipal().toString());
         log.info("Save new event " + newEvent);
+        Optional <EndUser> user = userRepo.findByUsername(authenticationToken.getPrincipal().toString());
+        newEvent.setEndUser(user.get());
          return eventRepository.save(newEvent);
         /*try{
         return eventRepository.save(newEvent);
