@@ -42,8 +42,8 @@ function MyEvents() {
             showCancelButton: true,
             confirmButtonText: 'Yes, delete it!',
             cancelButtonText: 'Cancel',
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
+            confirmButtonColor: '#FF6969',
+            cancelButtonColor: '#427D9D',
           });
     
           // If the user clicks the "Delete" button in the confirmation dialog
@@ -77,7 +77,7 @@ function MyEvents() {
                                 <Card sx={{ width: 400, boxShadow: 5,  bgcolor:'secondary.light'}} >            
                                     <CardContent sx={{ display: 'flex', justifyContent: 'center', bgcolor:'secondary.main' }} title={event.startDate}>
                                         <Avatar
-                                            sx={{ width: 100, height: 100, bgcolor:'secondary.light', color:'secondary.contrastText' }}
+                                            sx={{ width: 100, height: 100, bgcolor:'secondary.light', color:'secondary.contrastText', fontSize:48 }}
                                             alt={event.category.categoryName[0]}
                                             src={event.category.categoryName[0]}
                                         />
