@@ -94,8 +94,8 @@ function MyEvents() {
                                         <Typography><b>Category:</b> {event.category.categoryName}</Typography>
                                     </CardContent>  
                                     <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-                                        <IconButton component={Link} to={'/editevent/' + event.eventId }><EditIcon /></IconButton>
-                                        <IconButton onClick={() => handleDeleteEvent(event.eventId)}><DeleteIcon/></IconButton>
+                                        <IconButton component={Link} to={'/editevent/' + event.eventId } sx={{mr:5, border:2, borderColor : "secondary.main"}}><EditIcon /></IconButton>
+                                        <IconButton onClick={() => handleDeleteEvent(event.eventId)} sx={{ border:2, borderColor : "secondary.main", color: "components.danger"}}><DeleteIcon/></IconButton>
                                     </CardActions>
                                 </Card>
                             </Grid>
