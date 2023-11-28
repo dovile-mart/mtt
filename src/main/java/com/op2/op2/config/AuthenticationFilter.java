@@ -26,10 +26,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, java.io.IOException {
         // Get token from the Authorization header
         String jws = request.getHeader(HttpHeaders.AUTHORIZATION);
-
+        System.out.println("JWT ON " + jws);
         if (jws != null) {
             // Verify token and get user
+                        System.out.println("JUKKA IS ");
             String user = jwtService.getAuthUser(request);
+            System.out.println("USER IS "+ user);
             // Authenticate
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                 user, null, java.util.Collections.emptyList());
