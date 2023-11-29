@@ -38,7 +38,7 @@ function Weather() {
     console.log(weather)
     if (weather && weather.weather) {
       return (
-        <Card sx={{ display: "flex", p:2  }}>
+        <Card sx={{ display:'flex', p:2, mt:2 }}>
           <CardMedia
             component="img"
             sx={{ height: 100, width: 100 }}
@@ -92,7 +92,7 @@ function Weather() {
 
 return (
   <Box sx={{ display: "flex", justifyContent: "center" }}>
-    <Stack backgroundColor="lightgray" p={2} direction="row" spacing={2} m={3}>
+    <Stack sx={{ bgcolor:"secondary.light", p: 2 }} direction="row" spacing={2} m={3}>
       <Box>{renderWeatherInfo(cityWeather)}</Box>
       <Stack direction="column" spacing={0}>
         <TextField

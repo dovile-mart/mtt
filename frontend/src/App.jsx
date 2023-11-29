@@ -32,36 +32,13 @@ const mttTheme = createTheme({  //https://colorhunt.co/palette/164863427d9d9bbec
       bgcolor:"#F1B4BB",
       color: "#FFF5E0",
       danger:"#FF6969",
-      error: "",
+      error: "#F8BB86",
+      submit: "#A5DC86"
     }
   },
 });
-const mttTheme2 = createTheme({ //https://colorhunt.co/palette/1320431f4172f1b4bbfdf0f0
-  palette: {
-    contrastThreshold: 4.5, //saavutettavuuteen???
-    primary: {
-      main: '#1F4172',
-    },
-    secondary: {
-      main: '#F1B4BB',
-      light: '#FDF0F0',
-      contrastText: '#132043',
-    },
-  },
-});
-const mttTheme3 = createTheme({ //https://colorhunt.co/palette/151515301b3f3c415cb4a5a5
-  palette: {
-    contrastThreshold: 4.5, //saavutettavuuteen???
-    primary: {
-      main: '#151515',
-    },
-    secondary: {
-      main: '#3C415C',
-      light: '#B4A5A5',
-      contrastText: '#301B3F',
-    },
-  },
-});
+
+
 export default function App() {
   
   return (
