@@ -6,6 +6,6 @@ RUN mvn clean package -DskipTests
 FROM openjdk:17-jdk-slim
 
 ENV SPRING_CONFIG_NAME=application
-COPY --from=build /app/target/op2-0.0.1-SNAPSHOT.jar mtt.jar
+COPY --from=build /target/op2-0.0.1-SNAPSHOT.jar mtt.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","mtt.jar"]
