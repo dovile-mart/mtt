@@ -65,7 +65,17 @@
 							<select class="form-control col-sm-10" id="locations" th:field="*{location}" >
 	       						<option th:each="location: ${locations}" th:value	="${location.locationId}" th:text="${location.city} + ' ' + ${location.zipcode}"></option>
 	    					</select>
-			   		</div><br>
+			   		</div>
+					<div class="col-auto my-1">
+						<label class="mr-sm-2">Indoor Event</label>
+						<div class="col-sm-10">
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" th:field="*{indoorEvent}" />
+								<label class="form-check-label" for="indoorEvent">Indoor Event</label>
+							</div>
+						</div>
+					</div>
+					<br>
 									
 				<div class="form-group align-center" >
 					<input type="submit" class="btn btn-success" value="Save"></input>

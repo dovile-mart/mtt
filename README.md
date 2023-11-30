@@ -2,7 +2,7 @@
 
 # "Mitä tänään tehtäisiin?"
 
-Tiimi: Lairi Piia, Martinonyte Dovile, Muittari Samuel, Myllymäki Aliisa, Rautiainen Aleksis, Rusi Romeo
+Tiimi: Lairi Piia, [Martinonyte Dovile](https://github.com/dovile-mart), Muittari Samuel, [Myllymäki Aliisa](https://github.com/AliiMyl), Rautiainen Aleksis, [Rusi Romeo](https://github.com/romeorusi)
 
 ## Johdanto
 

@@ -8,13 +8,12 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import { Typography, TextField, Button } from "@mui/material";
 import Weather from "./Weather";
-import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-
+import { getEvents } from "../services/EventService";
 function FrontPage() {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -28,16 +27,14 @@ function FrontPage() {
   }, []);
 
   //tapahtumahaku tietokannasta:
-  const fetchDBevents = () => {
-    fetch("http://localhost:8080/events")
-      .then((response) => response.json())
-      .then((data) => {
-        if (data && data.length > 0) {
-          const dbEvents = data.map((event) => ({
+  const fetchDBevents = async () => {
+    try {
+      const response = await getEvents();
+          const dbEvents = response.map((event) => ({
             eventId: event.eventId,
             eventName: event.eventName,
-            startDate: event.startDate,
-            endDate: event.endDate,
+            startDate: formatDateTime(event.startDate),
+            endDate: event.endDate ? formatDateTime(event.endDate) : " ",
             price: event.price + " €",
             description: event.description,
             location: event.location,
@@ -47,9 +44,11 @@ function FrontPage() {
           console.log('Events from H2: ', dbEvents);
           setEvents([...dbEvents]);
           setFilteredEvents([...dbEvents]); // Aseta suodatetut tapahtumat alkuperäisiksi
+    } catch (error) {
+      console.log(error)
         }
-      });
-  };
+      };
+
 
   //api-rajapinnasta tulleen aikamuodon formattointi:
   const formatDateTime = (dateTimeString) => {
@@ -58,8 +57,34 @@ function FrontPage() {
       month: 'numeric',
       day: 'numeric',
       hour: 'numeric',
-      minute: 'numeric'
+      minute: 'numeric',
     });
+  };
+
+  const fetchLocationData = (placeId) => {
+    return fetch(`${placeId}`)
+      .then((placeResponse) => placeResponse.json())
+      .then((placeData) => {
+        //location tiedot:
+        const locationCity = placeData.address_locality.fi;
+        const locationAddress = placeData.street_address.fi;
+        const locationZipCode = placeData.postal_code;
+        //console.log(locationAddress + ", " + locationZipCode + ", " + locationCity);
+        return {
+          city: locationCity,
+          address: locationAddress,
+          zipCode: locationZipCode,
+        };
+      });
+  }
+  
+  const fetchEventCategory = (categoryId) => {
+    return fetch(`${categoryId}`)
+      .then((categoryResponse) => categoryResponse.json())
+      .then((categoryData) => {
+        const categoryName = categoryData.name.fi;
+        return categoryName;
+      });
   };
 
   //tapahtumahaku avoimesta rajapinnasta:
@@ -72,62 +97,59 @@ function FrontPage() {
           .filter(eventData => eventData.name.fi)
           .map((eventData) => {
             const formattedStartDate = formatDateTime(eventData.start_time);
-            const formattedEndDate = formatDateTime(eventData.end_time);
-        
+            const formattedEndDate = eventData.end_time ? formatDateTime(eventData.end_time):'nonono';
+
+            // Tarkista, onko tapahtuma ilmainen
+            const isFree = eventData.offers && eventData.offers.length > 0 && eventData.offers[0].is_free;
+            // Aseta hinta sen mukaan, onko ilmainen vai ei
+            const eventPrice = isFree ? "Vapaa pääsy" :
+              (eventData.offers && eventData.offers.length > 0 &&
+                eventData.offers[0].price && eventData.offers[0].price.fi)
+                ? eventData.offers[0].price.fi
+                : 'Ei tietoa';
+          
+            //tapahtuman kuvaus, lyhyt ja pitkä:
+            const descriptionShort = eventData.short_description.fi;
+            //const descriptionLong = eventData.description.fi;
+            //console.log(descriptionLong);
+
             //jokaisen tapahtuman location-linkin haku:
             const placeId = eventData.location ? eventData.location['@id'] || '' : '';
-            return fetch(`${placeId}`)
-              .then((placeResponse) => placeResponse.json())
+            //jokaisen tapahtuman kategoria-linkin haku:
+            const categoryId = eventData.keywords[0] ? eventData.keywords[0]['@id'] || '' : '';
+            
+            return fetchLocationData(placeId)
               .then((placeData) => {
-                //  console.log("place data on: ", placeData)
-                //location tiedot:
-                const locationCity = placeData.address_locality.fi;
-                const locationAddress = placeData.street_address.fi;
-                const locationZipCode = placeData.postal_code;
-              //  console.log(locationAddress+", "+locationZipCode+", "+locationCity);
-              
-                // Tarkista, onko tapahtuma ilmainen
-                const isFree = eventData.offers && eventData.offers.length > 0 && eventData.offers[0].is_free;
-                // Aseta hinta sen mukaan, onko ilmainen vai ei
-                const eventPrice = isFree ? "Vapaa pääsy" :
-                  (eventData.offers && eventData.offers.length > 0 &&
-                    eventData.offers[0].price && eventData.offers[0].price.fi)
-                    ? eventData.offers[0].price.fi
-                    : 'Ei tietoa';
-              
-                //tapahtuman kuvaus, lyhyt ja pitkä:
-                const descriptionShort = eventData.short_description.fi;
-                //const descriptionLong = eventData.description.fi;
-                //console.log(descriptionLong);
-
-                return {
-                  eventId: eventData.id,
-                  eventName: eventData.name.fi,
-                  startDate: formattedStartDate,
-                  endDate: formattedEndDate,
-                  price: eventPrice,
-                  description: descriptionShort,
-                  location: locationCity,
-                  streetAddress: locationAddress,
-                  category: "Helsingin kategoria",
-                  }
-                
-              })
+                return fetchEventCategory(categoryId)
+                  .then((categoryName) => {
+                    return {
+                      eventId: eventData.id,
+                      eventName: eventData.name.fi,
+                      startDate: formattedStartDate,
+                      endDate: formattedEndDate,
+                      price: eventPrice,
+                      description: descriptionShort,
+                      location: placeData.city,
+                      streetAddress: placeData.address,
+                      category: categoryName,
+                    };
+                  });
+              });
           });
+        
         return Promise.all(apiHelsinkiEvents)
-        .then((events)=>{
+          .then((events) => {
             setEvents((prevEvents) => [...prevEvents, ...events]);
             setFilteredEvents((prevEvents) => [...prevEvents, ...events]);
           })
-          .catch((placeError) => {
-            console.error('Couldnt fetch place data: ', placeError);
+          .catch((error) => {
+            console.error('Could not fetch data: ', error);
           });
-      }).catch((error) => {
-      console.error('Could not fetch data: ', error);
-    });
-
+      })
+      .catch((error) => {
+        console.error('Could not fetch data: ', error);
+      });
   };
-     
 
     const fetchEspooEventDataFromApi = () => {
       fetch("http://api.espoo.fi/events/v1/event/?include=location%2Ckeywords&page=2")
@@ -236,9 +258,12 @@ function FrontPage() {
         const filtered = events.filter((event) => {
           const startDate = new Date(event.startDate); // Olettaen että event.startDate on muotoa "yyyy-MM-dd"
           const searchDate = new Date(keyword); // Olettaen että keyword on muotoa "yyyy-MM-dd"
+          const endDate = new Date(event.endDate); // Olettaen että keyword on muotoa "yyyy-MM-dd"
           startDate.setHours(0, 0, 0, 0);
           searchDate.setHours(0, 0, 0, 0);
-          return startDate.getTime() === searchDate.getTime();  //vertallaan päivämääriä ilman aikaa
+          endDate.setHours(23, 59, 59, 999)
+          return ((startDate <= searchDate && searchDate <= endDate) ||
+            startDate.getTime() === searchDate.getTime());  //vertallaan päivämääriä ilman aikaa
         });
         setFilteredEvents(filtered);
       }
@@ -315,7 +340,6 @@ function FrontPage() {
                 <TableCell>Event name</TableCell>
                 <TableCell align="right">Starts</TableCell>
                 <TableCell align="right">Ends</TableCell>
-                {/*<TableCell align="right">Price</TableCell>*/}
                 <TableCell align="right">City</TableCell>
                 <TableCell align="right">Category</TableCell>
                 <TableCell align="right"></TableCell>
@@ -330,8 +354,7 @@ function FrontPage() {
                     {event.eventName}
                   </TableCell>
                   <TableCell align="right">{event.startDate}</TableCell>
-                  <TableCell align="right">{event.endDate}</TableCell>
-                  {/*<TableCell align="right">{event.price}</TableCell>*/}
+                  <TableCell align="right">{event?.endDate ||'-'}</TableCell>
                   <TableCell align="right">{event.location?.city || event.location || 'N/A'}</TableCell>
                   <TableCell align="right">{event.category?.categoryName || event.category || 'N/A'}</TableCell>
                   <TableCell align="right">
@@ -340,10 +363,13 @@ function FrontPage() {
                   </TableRow>
                   {expandedEventId === event.eventId && (
                     <TableRow>
-                      <TableCell colSpan={6}>
-                        Price: {event.price}<br/>
-                        Street Address: {event.streetAddress || 'N/A'}<br />
-                        Description: {event.description || 'N/A'}
+                      <TableCell colSpan={1}></TableCell>
+                      <TableCell colSpan={2}>
+                        <b>Price:</b> {event.price}<br />
+                        <b>Address:</b> {event.streetAddress + ' ' + event.location.city || event.location.city || 'N/A'}
+                      </TableCell>
+                      <TableCell colSpan={3}>
+                        <b>Description:</b> {event.description || 'N/A'}
                     </TableCell>
                   </TableRow>
                 )}

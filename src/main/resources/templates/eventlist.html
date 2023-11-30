@@ -32,6 +32,7 @@
                     <th>Address</th>
                     <th>City</th>
                     <th>Category</th>
+                    <th>Indoor Event</th>
                     <th></th>
                 </tr>
             </thead>
@@ -54,6 +55,8 @@
                         <span th:if="${event.category != null}"
                         th:text="${event.category.categoryName}"></span>
                     </td>
+
+                    <td th:text="${event.indoorEvent ? 'Yes' : 'No'}"></td>
                     
                     <td>
                         <form th:action="@{/deleteEvent/{eventId}(eventId=${event.eventId})}" method="get"

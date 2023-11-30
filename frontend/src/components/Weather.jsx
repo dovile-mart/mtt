@@ -16,6 +16,7 @@ function Weather() {
   
 
   const fetchWeatherData = (city, setWeather) => {
+    console.log('apia kutsuttu', city)
     fetch(
       `http://api.openweathermap.org/data/2.5/weather?lang=fi&q=${city}&units=metric&APPID=${apiKey}`
     )
@@ -30,13 +31,14 @@ function Weather() {
 
   useEffect(() => {
     fetchWeatherData(selectedCity, setCityWeather);
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCity]);
 
   const renderWeatherInfo = (weather) => {
     console.log(weather)
     if (weather && weather.weather) {
       return (
-        <Card sx={{ display: "flex", p:2  }}>
+        <Card sx={{ display:'flex', p:2, mt:2 }}>
           <CardMedia
             component="img"
             sx={{ height: 100, width: 100 }}
@@ -90,7 +92,7 @@ function Weather() {
 
 return (
   <Box sx={{ display: "flex", justifyContent: "center" }}>
-    <Stack backgroundColor="lightgray" p={2} direction="row" spacing={2} m={3}>
+    <Stack sx={{ bgcolor:"secondary.light", p: 2 }} direction="row" spacing={2} m={3}>
       <Box>{renderWeatherInfo(cityWeather)}</Box>
       <Stack direction="column" spacing={0}>
         <TextField

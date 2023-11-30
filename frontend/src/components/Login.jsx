@@ -1,18 +1,49 @@
 import { Typography, Button, TextField } from '@mui/material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
+import axios from 'axios';
 
 function LoginPage() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [user, setUser] = useState({
+    username: '',
+    password: '',
+  });
+  const { login } = useAuth();
+  const { username, password } = user;
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
+
+  const handleChange = (event) => {
+    setError(null);
+
+    setUser({ ...user, [event.target.name]: event.target.value });
+  };
 
   const handleLogin = () => {
-    // You can add the login logic here, e.g., sending a request to the server.
-    console.log(`Logging in with username: ${username} and password: ${password}`);
+    axios
+      .post('http://localhost:8080/api/auth/login', user, {
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((res) => {
+        const jwtToken = res.headers.authorization;
+        if (jwtToken !== null) {
+          sessionStorage.setItem('jwt', jwtToken);
+          login();
+          console.log('isAuthenticated');
+          navigate('/');
+        }
+      })
+      .catch((error) => {
+        // Käsittely, jos kirjautuminen epäonnistuu
+        setError('Invalid username or password');
+      });
   };
 
   return (
     <div>
       <Typography variant="h4">Login</Typography>
+      {error && <Typography color="error">{error}</Typography>}
 
       <form>
         <div>
@@ -20,8 +51,9 @@ function LoginPage() {
             label="Username"
             variant="outlined"
             fullWidth
+            name="username"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={handleChange}
           />
         </div>
 
@@ -31,8 +63,9 @@ function LoginPage() {
             label="Password"
             variant="outlined"
             fullWidth
+            name="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handleChange}
           />
         </div>
 
