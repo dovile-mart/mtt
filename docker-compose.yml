@@ -1,31 +1,27 @@
 version: "3.9"
 
-#networks:
-#  mttnetwork:
-#    name: my-internal-network
-#    external: false
 services:
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: backi
     ports:
       - "8080:8080"
-    depends_on:
-      - frontend
-    env_file: env.properties
-#    environment:
-#      - localhost=host.docker.internal
-#    networks:
-#      - mttnetwork
+#    depends_on:
+#      - frontend
+#    env_file: env.properties
+    environment:
+      - localhost=host.docker.internal
+    networks:
+      - default
   frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile_frontend
+    image: mtt-front
     ports:
       - "5173:5173"
-    env_file: .env
+#    env_file: .env
     depends_on:
       - backend
-#    networks:
-#      - mttnetwork
+    networks:
+      - default
+
+#  networks:
+#    mttnetwork:
+#      driver: bridge
