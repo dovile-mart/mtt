@@ -1,5 +1,5 @@
 [![CI](https://github.com/Ohjelmistoprojekti2-Black/mtt/actions/workflows/ci.yml/badge.svg)](https://github.com/Ohjelmistoprojekti2-Black/mtt/actions/workflows/ci.yml)
-[![(YouTube)](https://img.shields.io/youtube/views/GJsMSL9rcRw)](https://www.youtube.com/watch?v=NXjmMJXMAXk)
+[![(YouTube)](https://img.shields.io/youtube/views/NXjmMJXMAXk)](https://www.youtube.com/watch?v=NXjmMJXMAXk)
 # "Mitä tänään tehtäisiin?"
 
 Tiimi: Lairi Piia, [Martinonyte Dovile](https://github.com/dovile-mart), Muittari Samuel, [Myllymäki Aliisa](https://github.com/AliiMyl), Rautiainen Aleksis, [Rusi Romeo](https://github.com/romeorusi)
